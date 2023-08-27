@@ -3,15 +3,11 @@ import Home from '@/views/Home.vue';
 </script>
 
 <template>
-  <main>
+  <main class="bg-gray-700 h-screen flex justify-center">
       <Home />
   </main>
 </template>
 
 <style>
-* {
-  margin:0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 </style>
