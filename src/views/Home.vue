@@ -8,8 +8,8 @@
             <GameResult :Choice="Choice"  />
             <ResetButton @reset-app="resetApp" />
         </div>
-        <Score />
-        <WinnerPercentage />
+        <Score :GameScore="GameScore" />
+        <WinnerPercentage :percentage="percentage" />
     </div>
 </template>
 
@@ -22,6 +22,14 @@ import ResetButton from '@/components/ResetButton.vue';
 import type typeImages from '@/types';
 import GameResult from '@/components/GameResult.vue';
 import type typeResult from '@/types/typeResult';
+const percentage = ref<number>(0);
+const GameScore = reactive(
+    {
+        scoreUser:0,
+        scoreComputer:0,
+        drawScore:0,
+    }
+)
 const result = ref(true);
 
 
@@ -52,25 +60,29 @@ const Choice:typeResult = reactive(
     }
 )
 
+const GameNumber = ref(0);
 const gameResult = (index:number) => {
     const choiceComputer = getRandomArbitrary(0,Images.value.length - 1);
+    GameNumber.value++;
+    result.value = false;
+    Choice.nameUser = Images.value[index].name;
+    Choice.nameComputer = Images.value[choiceComputer].name;
     if(choiceComputer === index){
-        result.value = false;
         Choice.result = "It's draw!";
-        Choice.nameUser = Images.value[index].name;
-        Choice.nameComputer = Images.value[choiceComputer].name;
+        GameScore.drawScore++;
+        percentage.value = (GameScore.scoreUser*100)/GameNumber.value;
         return Choice;
     }else if(choiceComputer === 0 && index === 1 || choiceComputer === 2 && index === 0 || choiceComputer === 1 && index === 2){
-        result.value = false;
+        
         Choice.result = "You lose!";
-        Choice.nameUser = Images.value[index].name;
-        Choice.nameComputer = Images.value[choiceComputer].name;
+        GameScore.scoreComputer++;
+        percentage.value = (GameScore.scoreUser*100)/GameNumber.value;
         return Choice;
     }else if(choiceComputer === 0 && index === 2 || choiceComputer === 1 && index === 0 ||  choiceComputer === 2 && index === 1){
-        result.value = false;
+        
         Choice.result = "You win!";
-        Choice.nameUser = Images.value[index].name;
-        Choice.nameComputer = Images.value[choiceComputer].name;
+        GameScore.scoreUser++;
+        percentage.value = (GameScore.scoreUser*100)/GameNumber.value;
         return Choice;
     }
 }
